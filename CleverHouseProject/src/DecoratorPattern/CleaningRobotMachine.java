@@ -1,0 +1,19 @@
+package DecoratorPattern;
+
+public class CleaningRobotMachine implements CleaningRobotMachineComponent{
+
+    @Override
+    public String addCleaningMethod() {
+        return "It's robot cleaning machine :)\n";
+    }
+
+    @Override
+    public int getCleaningTime() {
+        return 0;
+    }
+
+    @Override
+    public String getCollectedModeInfo() {
+        return "You chose mode(-s):\n";
+    }
+}

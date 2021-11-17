@@ -3,14 +3,19 @@ import AdapterPattern.CurrentTime;
 import AdapterPattern.MilitaryFormatTime;
 import AdapterPattern.TimeConverter;
 import BridgePattern.concreteAbstractions.OvenTouchScreen;
-import DecoratorPattern.*;
-import FactoryPattern.ConcreteCreator.GasStoveFactory;
-import FactoryPattern.ConcreteCreator.MicrowaveFactory;
-import FactoryPattern.Factory.OvenFactory;
-import FactoryPattern.Product.Oven;
-import FactoryPattern.concreteProduct.Microwave;
-import ObserverPattern.MainDevice;
-import ObserverPattern.Member;
+import DecoratorPattern.component.CleaningRobotMachineComponent;
+import DecoratorPattern.concreteComponent.CleaningRobotMachine;
+import DecoratorPattern.concreteDecorators.VacuumCleaning;
+import DecoratorPattern.concreteDecorators.WashingPowderCleaning;
+import DecoratorPattern.concreteDecorators.WetCleaning;
+import FactoryPattern.concreteCreator.GasStoveFactory;
+import FactoryPattern.concreteCreator.MicrowaveFactory;
+import FactoryPattern.factory.OvenFactory;
+import FactoryPattern.product.Oven;
+import ObserverPattern.concretePublisher.MainDevice;
+import ObserverPattern.concreteSubscribers.Member;
+import StrategyPattern.Extentions.CleanWithoutMusic;
+import StrategyPattern.Extentions.OpenDoorHorizontally;
 
 import java.text.ParseException;
 import java.util.Scanner;
@@ -21,6 +26,7 @@ public class Main {
         Scanner sc = new Scanner(System.in);
         boolean on = true;
 
+        //Observer pattern object creation
         MainDevice mainDevice = new MainDevice();
 
         while(on){
@@ -31,15 +37,18 @@ public class Main {
             if(option.equals("Join")){
                 System.out.println("what's your name?\n");
                 String name = sc.next();
-
+                //Observer pattern object creation
                 Member member = new Member(name);
 
                 mainDevice.joinMember(member);
             }
 
             // Clean option
-            else if(option.equals("Make wet cleaning")){
+            else if(option.equals("Clean")){
+                //Decorator pattern object creation
                 CleaningRobotMachineComponent methods = null;
+                //Strategy pattern object creation
+                CleaningRobotMachine robotMachine = new CleaningRobotMachine(new CleanWithoutMusic(), new OpenDoorHorizontally());
 
                 System.out.println("What type of cleaning you wish?\n" +
                         "- vacuum cleaning\n" +
@@ -48,21 +57,26 @@ public class Main {
                 option = sc.next();
 
                 if(option.equals("vacuumCleaning")){
-                    methods = new VacuumCleaning(new CleaningRobotMachine());
+                    methods = new VacuumCleaning(new CleaningRobotMachine(new CleanWithoutMusic(), new OpenDoorHorizontally()));
                 }
                 else if(option.equals("wetCleaning")){
-                    methods = new WetCleaning(new VacuumCleaning(new CleaningRobotMachine()));
+                    methods = new WetCleaning(new VacuumCleaning(new CleaningRobotMachine(new CleanWithoutMusic(), new OpenDoorHorizontally())));
                 }
                 else if(option.equals("powderCleaning")){
-                    methods = new WetCleaning(new WashingPowderCleaning(new VacuumCleaning(new CleaningRobotMachine())));
+                    methods = new WetCleaning(new WashingPowderCleaning(new VacuumCleaning(new CleaningRobotMachine(new CleanWithoutMusic(), new OpenDoorHorizontally()))));
                 }
 
                 assert methods != null;
+                //Strategy pattern method calling
+                robotMachine.performCleaning();
+                robotMachine.deviceDescription();
+                //Decorator pattern method calling
                 System.out.println(methods.getCollectedModeInfo());
             }
 
             // Oven option
             else if(option.equals("Oven")){
+                //Factory pattern object creation
                 OvenFactory ovenFactory = null;
                 Oven oven = null;
 
@@ -76,6 +90,7 @@ public class Main {
                     ovenFactory = new MicrowaveFactory();
                     oven = ovenFactory.createOven();
 
+                    //Bridge pattern object creation
                     OvenTouchScreen touchScreen = new OvenTouchScreen(oven);
                     // turning on touch screen
                     touchScreen.power();
@@ -84,13 +99,16 @@ public class Main {
                             "1. insert time(0- 30 min): \n");
                     option = sc.next();
 
+                    // increasing time method from Bridge pattern
                     touchScreen.increaseTime(Integer.parseInt(option));
                     System.out.println("2. insert power(0 - 800): ");
 
                     option = sc.next();
 
+                    // increasing power method from Bridge pattern
                     touchScreen.increaseHeatingTypeValue(Integer.parseInt(option));
 
+                    //info method from Factory pattern
                     oven.info();
                     // turning off touch screen
                     touchScreen.power();
@@ -99,6 +117,7 @@ public class Main {
                     ovenFactory = new GasStoveFactory();
                     oven = ovenFactory.createOven();
 
+                    //Bridge pattern object creation
                     OvenTouchScreen touchScreen = new OvenTouchScreen(oven);
                     // turning on touch screen
                     touchScreen.power();
@@ -107,13 +126,16 @@ public class Main {
                             "1. insert time: ");
                     option = sc.next();
 
+                    // increasing time method from Bridge pattern
                     touchScreen.increaseTime(Integer.parseInt(option));
                     System.out.println("2. insert temperature(0 - 250 C):");
 
                     option = sc.next();
 
+                    // increasing power method from Bridge pattern
                     touchScreen.increaseHeatingTypeValue(Integer.parseInt(option));
 
+                    //info method from Factory pattern
                     oven.info();
                     // turning off touch screen
                     touchScreen.power();

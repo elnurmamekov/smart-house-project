@@ -1,8 +1,8 @@
 package BridgePattern.concreteAbstractions;
 
 
-import BridgePattern.Abstraction.TouchScreen;
-import FactoryPattern.Product.Oven;
+import BridgePattern.abstraction.TouchScreen;
+import FactoryPattern.product.Oven;
 
 public class OvenTouchScreen implements TouchScreen {
     private Oven oven;

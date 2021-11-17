@@ -1,7 +1,7 @@
 package FactoryPattern.concreteProduct;
 
 
-import FactoryPattern.Product.Oven;
+import FactoryPattern.product.Oven;
 
 public class Microwave implements Oven {
     private boolean on = false;
